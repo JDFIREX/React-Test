@@ -25,6 +25,14 @@ class Index extends React.Component {
                 <hr />
                 <App.Checked />
                 <hr />
+                <App.formularz />
+                <hr />
+                <App.Select />
+                <hr />
+                <App.DoubleInput />
+                <hr />
+                <App.Temperatura />
+                <hr />
             </>
         )
     }
