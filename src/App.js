@@ -447,3 +447,165 @@ export class Dziedziczenie extends React.Component {
 
 // products
 
+class ProductionInput extends React.Component {
+    constructor(props){
+        super(props);
+        this.InputClick = this.InputClick.bind(this)
+        this.ChangeValue = this.ChangeValue.bind(this)
+    }
+
+    InputClick(event) {
+        this.props.onCheckboxChange(event.target.checked)
+    }
+
+    ChangeValue(event) {
+        this.props.onProductionInputChange(event.target.value)
+    }
+
+    render(){
+        return(
+            <div>
+                <input type="text" value={this.props.value} onChange={this.ChangeValue} /> 
+                <br /> 
+                <input 
+                    type="checkbox" 
+                    data-check={this.props.inputChecked}
+                    checked={this.props.inputChecked} 
+                    onChange={this.InputClick} />
+                <label>{this.props.mess}</label>
+            </div>
+        )
+    }
+}
+
+class NewProductionList extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render() {
+        let list = [];
+        this.props.items.map(i => {
+            if(i.stocked){
+                list.push(
+                    <div>
+                        <h5>{i.name}</h5>
+                        <p>{i.price}</p>
+                    </div>
+                )
+            }else{
+                list.push(
+                    <div>
+                        <h5 style={{color: "red"}}>{i.name}</h5>
+                        <p>{i.price}</p>
+                    </div>
+                )
+            }
+            
+        });
+        return (
+            <div>
+                {list}
+            </div>
+        )
+    }
+}
+
+
+class ProductionList extends React.Component {
+    constructor(props){
+        super(props);
+    }
+    render(){
+        let categories = [];
+
+        this.props.list.map(a => {
+            if(!categories.includes(a.category)){
+                categories.push(a.category)
+            }
+        })
+        let newList = categories.map(c => {
+            return c = this.props.list.filter(l => {
+                return l.category == c ? l : null;
+            })
+        })
+        let list = [];
+
+        newList  = newList.map(n => {
+            list.push(
+                <div>
+                    <h1>{n[0].category}</h1>
+
+                    <NewProductionList items={n} />
+                </div> 
+            )
+        })
+
+        return(
+            <div>
+                {
+                   list
+                }
+            </div>
+        )
+    }
+}
+
+
+export class Production extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            value : "",
+            checked : false
+        }
+        this.productionChange = this.productionChange.bind(this)
+        this.checkboxChange = this.checkboxChange.bind(this)
+    }
+
+    productionChange(event){
+        this.setState({
+            value : event
+        })
+    }
+    checkboxChange(event) {
+        this.setState({
+            checked : event
+        })
+    }
+
+    render(){
+        let products = this.props.products.filter( p => {
+            let VL = this.state.value.length;
+            if(VL == 0){
+                if(this.state.checked){
+                    return p.stocked
+                }else{
+                    return p
+                }
+            }
+            if(this.state.checked){
+                return p.stocked && p.name.substr(0,VL).toLowerCase() == this.state.value.toLowerCase() ? p : null;
+            }else{
+                return p.name.substr(0,VL).toLowerCase() == this.state.value.toLowerCase() ? p : null;
+            }
+        });
+
+
+        return (
+            <>
+            <ProductionInput 
+                value={this.state.value}
+                inputChecked={this.state.checked}
+                mess={"Only show products in stock"}
+                onProductionInputChange={this.productionChange}
+                onCheckboxChange={this.checkboxChange}
+            />
+            <ProductionList 
+                list={products}
+            />
+            </>
+        )
+    }
+
+}

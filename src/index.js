@@ -42,6 +42,9 @@ class Index extends React.Component {
                 <hr />
                 <App.Dziedziczenie />
                 <hr />
+                <App.Production  products={PRODUCTS}/>
+                <hr />
+
             </>
         )
     }
