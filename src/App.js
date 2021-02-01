@@ -392,4 +392,58 @@ export class Temperatura extends React.Component {
         )
     }
 }
+function DziedziczenieOkno(props){
+    return(
+        <div>
+            <div>
+                <h1>{props.title}</h1>
+                <p>{props.message}</p>
+            </div>
+            {props.children}
+        </div>
+    )
+}
+
+
+
+export class Dziedziczenie extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            value : ""
+        }
+        this.DziedziczenieChange = this.DziedziczenieChange.bind(this)
+        this.DziedziczenieSubmit = this.DziedziczenieSubmit.bind(this)
+
+    }
+
+    DziedziczenieChange(event) {
+        this.setState({
+            value : event.target.value
+        })
+    }
+    DziedziczenieSubmit(event) {
+        document.querySelector(".Dziedziczenie-p").innerHTML = this.state.value;
+    }
+
+    render(){
+        return (
+            <DziedziczenieOkno 
+                title="Tytuł"
+                message="Wiadomość"
+            >
+                <input 
+                    type="text" 
+                    onChange={this.DziedziczenieChange} 
+                    value={this.state.value} 
+                />
+                <button type="submit" onClick={this.DziedziczenieSubmit}>SUBMIT</button>
+                <p className="Dziedziczenie-p"></p>
+            </DziedziczenieOkno>
+        )
+    }
+}
+
+
+// products
 
