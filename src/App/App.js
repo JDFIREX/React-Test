@@ -1,4 +1,10 @@
 import React from "react";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from 'react-router-dom';
 
 export class Hello extends React.Component {
     render() {
@@ -608,4 +614,15 @@ export class Production extends React.Component {
         )
     }
 
+}
+
+
+export class Days extends React.Component {
+    render(){
+        return(
+            <>
+                <Link to="/" >MAIN PAGE</Link>
+            </>
+        )
+    }
 }

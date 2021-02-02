@@ -1,50 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import * as App from "./App";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from 'react-router-dom';
+
+import Day1 from "./Days/Day-1/Day-1";
+import Index from "./App/AppIndex";
 
 
-const numbers = [1, 2, 3, 4, 5];
-
-const PRODUCTS = [
-    {category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
-    {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'},
-    {category: 'Sporting Goods', price: '$29.99', stocked: false, name: 'Basketball'},
-    {category: 'Electronics', price: '$99.99', stocked: true, name: 'iPod Touch'},
-    {category: 'Electronics', price: '$399.99', stocked: false, name: 'iPhone 5'},
-    {category: 'Electronics', price: '$199.99', stocked: true, name: 'Nexus 7'}
-  ];
-
-class Index extends React.Component {
-    render() {
+class MainPage extends React.Component {
+    render(){
         return (
             <>
-                <App.Hello />
+                <h1>Main Page</h1>
                 <hr />
-                <App.Hello />
+                <Link to="/Index" >Test React</Link>
+                <br/>
                 <hr />
-                <App.Button />
-                <hr />
-                <App.CreateList />
-                <hr />
-                <App.NumberList numbers={numbers} />
-                <hr />
-                <App.Clock />
-                <hr />
-                <App.Checked />
-                <hr />
-                <App.formularz />
-                <hr />
-                <App.Select />
-                <hr />
-                <App.DoubleInput />
-                <hr />
-                <App.Temperatura />
-                <hr />
-                <App.Dziedziczenie />
-                <hr />
-                <App.Production  products={PRODUCTS}/>
-                <hr />
-
+                <Link to="/Day1" >React Day 1</Link>
             </>
         )
     }
@@ -52,4 +28,19 @@ class Index extends React.Component {
 
 
 
-ReactDOM.render(<Index />, document.querySelector(".root"))
+class MainIndex extends React.Component {
+    render() {
+        return  (
+            <Router>
+                <Switch>
+                    <Route exact path="/" component={MainPage} />
+                    <Route exact path="/Index" component={Index} />
+                    <Route exact path="/Day1" component={Day1} />
+                </Switch>
+            </Router>
+        )
+    }
+}
+
+
+ReactDOM.render(<MainIndex />, document.querySelector(".root"))
