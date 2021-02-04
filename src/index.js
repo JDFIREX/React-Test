@@ -7,7 +7,7 @@ import {
     Link
   } from 'react-router-dom';
 
-import Day1 from "./Days/Day-1/Day-1";
+import Test1 from "./Tests/Test-1/Test-1";
 import Index from "./App/AppIndex";
 
 
@@ -20,7 +20,7 @@ class MainPage extends React.Component {
                 <Link to="/Index" >Test React</Link>
                 <br/>
                 <hr />
-                <Link to="/Day1" >React Day 1</Link>
+                <Link to="/Test1" >Test React - 1</Link>
             </>
         )
     }
@@ -35,7 +35,7 @@ class MainIndex extends React.Component {
                 <Switch>
                     <Route exact path="/" component={MainPage} />
                     <Route exact path="/Index" component={Index} />
-                    <Route exact path="/Day1" component={Day1} />
+                    <Route exact path="/Test1" component={Test1} />
                 </Switch>
             </Router>
         )

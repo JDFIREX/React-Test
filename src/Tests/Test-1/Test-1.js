@@ -1,7 +1,7 @@
 import React from "react";
+import "./Test-1.css"
 
-
-export default class Day1 extends React.Component {
+export default class Test1 extends React.Component {
     constructor(props){
         super(props);
 
@@ -11,7 +11,7 @@ export default class Day1 extends React.Component {
 
         return (
             <>
-                <h1>Hello World serwerwre</h1>
+                <h1>Hello World Test - 1</h1>
             </>
         )
     }
