@@ -20,7 +20,7 @@ class MainPage extends React.Component {
                 <Link to="/Index" >Test React</Link>
                 <br/>
                 <hr />
-                <Link to="/Test1" >Test React - 1</Link>
+                <Link to="/Test1" >Test React - React Course 2020 - freeCodeCamp</Link>
             </>
         )
     }

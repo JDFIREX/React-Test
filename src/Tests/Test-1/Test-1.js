@@ -1,13 +1,11 @@
 import React, { useLayoutEffect, useState } from "react";
 import "./Test-1.css"
-
+import * as Test from "./Test-1-app"
 
 
 // 
 //  header
 // 
-
-
 
 function useWindowSize(){
     const [size, setSize] = useState(0);
@@ -39,6 +37,7 @@ function Nav(){
         )
     }
 }
+
 
 
 class Header extends React.Component {
@@ -80,6 +79,24 @@ export default class Test1 extends React.Component {
         return (
             <>
                 <Header />
+                <hr />
+                <Test.Greeting />
+                <hr />
+                <Test.BookList />
+                <hr />
+                <Test.BookListJSX />
+                <hr />
+                <Test.BookListProps />
+                <hr />
+                <Test.BookListPropsDestructuring />
+                <hr />
+                <Test.List />
+                <hr />
+                <Test.BooksList />
+                <hr />
+                <Test.ClickEvent />
+                <hr />
+                <Test.Advanced />
             </>
         )
     }
