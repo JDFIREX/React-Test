@@ -1,4 +1,4 @@
-import React,  { useState } from "react";
+import React,  { useState, useEffect } from "react";
 
 
 // greeting
@@ -516,6 +516,95 @@ const UseStateFunctionUpdateForm = () => {
 
 // use Effect Basic
 
+function UseEffectBasic() {
+
+    useEffect(() => {
+        if(value >= 1){
+         document.title = `new Messages(${value})`;
+        }
+    },[value])
+
+    const [value,setValue] = useState(0)
+
+    return(
+        <div>
+            <h1>use Effect Basic | Conditional | Dependency List</h1>
+            <p>{value}</p>
+            <button onClick={() => setValue(value + 1) }>++</button>
+        </div>
+    )
+}
+
+// use effect clean up function
+
+function UseEffectCleanup (){
+
+    const [size, setSize] = useState(window.innerWidth);
+
+    const checkSize = () => {
+        setSize(window.innerWidth)
+    }
+
+    useEffect(() => {
+        console.log("effect")
+        window.addEventListener("resize",checkSize)
+    },[])    
+
+    // useEffect(() => {
+    //     console.log("effect")
+    //     window.addEventListener("resize",checkSize)
+
+    //     return () => {
+    //         console.log("delete effect")
+    //         window.removeEventListener("resize",checkSize)
+    //     }
+
+    // },)  
+
+    return(
+        <>
+            <h1>Use Effect Clean up Function</h1>
+            <p>{size} window size in px </p>
+        </>
+    )
+}
+
+
+// fetch data
+    const url = "https://api.github.com/users";
+
+function FetchData () {
+
+    const [users,setUsers] = useState([]);
+
+
+    const getUsers = async () => {
+        const response = await fetch(url);
+        const users = await response.json();
+        setUsers(users)
+    }
+
+    useEffect(() => {
+        getUsers();
+    },[])
+
+
+    return(
+        <>
+            <h1>Fetch Data</h1>
+            <ul>
+                {users.map((user) => {
+                    return <li key={user.id}>
+                        <p>{user.login}</p>
+                        <p>{user.html_url}</p>
+                    </li>
+                })}
+            </ul>
+        </>
+    )
+
+}
+
 
 // Advanced Intro
 
@@ -538,6 +627,11 @@ export class Advanced extends React.Component {
                 <hr />
                 <UseStateFunctionUpdateForm />
                 <hr />
+                <UseEffectBasic />
+                <hr />
+                <UseEffectCleanup />
+                <hr />
+                <FetchData />
             </React.StrictMode>
         )
     }
