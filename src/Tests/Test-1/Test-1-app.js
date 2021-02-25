@@ -603,6 +603,273 @@ function FetchData () {
     )
 
 }
+// Multiple returns
+
+const urlUser = "https://api.github.com/users/QuincyLarson"
+
+function MultipleReturns (){
+
+    const [isLoading,setIsLoading] = useState(true);
+
+    const [isError, setIsError] = useState(false);
+
+    const [user,setUser] = useState("default user")
+
+
+    useEffect(() => {
+        fetch(urlUser)
+        .then((response) => response.json())
+        .then((user) => {
+            const { login } = user;
+            setUser(login)
+        })
+        .then(r => {
+            setIsLoading(false)
+        })
+        .catch(() => setIsError(true))
+    }, [])
+
+
+    if(isLoading){
+        return (
+        <div>
+            <h1>Multiple Returns</h1>
+            <p>Loading...</p>
+        </div>
+        )
+    }
+
+    if(isError){
+        return(
+            <div>
+                <h1>Multiple Returns</h1>
+                <p>Error...</p>
+            </div>
+        )
+    }
+
+    return(
+        <>
+            <h1>Multiple Returns</h1>
+            <p>{user}</p>
+        </>
+    )
+
+}
+
+
+// Short - Circuit Evaluation
+
+function ShortCircuitEvaluation() {
+
+    const [text,setText] = useState('');
+    const firstValue = text || "hello world";
+    const secondsValue = text && "hello world";
+
+    return(
+        <>
+            <h1>Short Circuit Evaluation</h1>
+            <p>{firstValue}</p>
+            <p>{secondsValue}</p>
+            <p>{text || "john doe"}</p>
+        </>
+    )
+}
+
+// Ternary Operator
+
+function TernaryOperator() {
+
+    const [text,setText] = useState('');
+    const [isError,setIsError] = useState('');
+    const firstValue = text || "hello world";
+    const secondsValue = text && "hello world";
+
+
+
+    return(
+        <>
+            <h1>Ternary Operator</h1>
+            <p>{text || "john doe"}</p>
+            <button onClick={() => setIsError(!isError)}>toggle error</button>
+            <p>{isError && "Error..."}</p>
+        </>
+    )
+}
+
+// show / hide component
+
+function ShowHideComponent() {
+
+    const [show, setShow] = useState(false)
+
+    const Item = () => {
+
+        const [size,setSize] = useState(window.innerWidth);
+
+        const checkSize = () => {
+            setSize(window.innerWidth)
+        }
+
+        useEffect(() => {
+            window.addEventListener('resize', checkSize)
+            return window.removeEventListener("resize", checkSize)
+        },[])
+
+        return(
+            <div>
+                <p>Window</p>
+                <p>size : {size}</p>
+            </div>
+        )
+    }
+
+    return(
+        <>
+            <h1>Show Hide Component</h1>
+            <button onClick={() => setShow(!show)}>{show ? "hide" : "show"}</button>
+            {show && <Item />}
+        </>
+    )
+}
+
+// from basics
+
+function FormBasics(){
+
+    const [fname, setFName ] = useState('');
+    const [email, setEmail] = useState('')
+    const [people, setPeople] = useState([])
+    const [id, setId] = useState(1)
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if(fname && email){
+            setId(id + 1)
+            const person = { fname, email , id};
+            setPeople((people) => {
+                return [...people, person]
+            })
+            setFName('');
+            setEmail('')
+
+        }
+
+    }
+
+    return(
+        <>
+            <h1>Form Basics</h1>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="fname">Name : </label>
+                <input 
+                    type="text" 
+                    id="fname" 
+                    name="fname" 
+                    value={fname} 
+                    onChange={(e) => setFName(e.target.value)}
+                />
+                <br />
+                <label htmlFor="email">E-mail : </label>
+                <input 
+                    type="text" 
+                    id="email" 
+                    name="email" 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <button type="submit">add Person</button>
+            </form>
+            <div>
+                {people && people.map(a => {
+                    return(
+                        <div key={a.id}>
+                            <p>{a.id}</p>
+                            <p>{a.fname}</p>
+                            <p>{a.email}</p>
+                        </div>
+                    )
+                })}
+            </div>
+        </>
+    )
+}
+
+// Multiple Inputs
+
+function MultipleInputs() {
+
+    const [person,setPerson] = useState({fname : "", email : "", age : ""})
+    const [people, setPeople] = useState([])
+
+    const handleChange = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+
+        setPerson({...person, [name] : value})
+
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if(person.fname && person.email && person.age){
+            const newPerson = {...person, id: new Date().getTime().toString()};
+            setPeople([...people,newPerson])
+
+            setPerson({fname : "", email : "", age : ""})
+        }
+    }
+
+    return(
+        <>
+            <h1>Multiple Inputs</h1>
+            <form >
+                <label htmlFor="fname">Name : </label>
+                <input 
+                    type="text" 
+                    id="fname" 
+                    name="fname" 
+                    value={person.fname} 
+                    onChange={handleChange}
+                />
+                <br />
+                <label htmlFor="email">E-mail : </label>
+                <input 
+                    type="text" 
+                    id="email" 
+                    name="email" 
+                    value={person.email} 
+                    onChange={handleChange}
+                />
+                <br />
+                <label htmlFor="age">Age : </label>
+                <input 
+                    type="text" 
+                    id="age" 
+                    name="age" 
+                    value={person.age} 
+                    onChange={handleChange}
+                />
+                <br />
+                <button type="submit" onClick={handleSubmit}>add Person</button>
+            </form>
+            <div>
+                {people && people.map(a => {
+                    return(
+                        <div key={a.id}>
+                            <p>{a.id} | {a.fname} | {a.email} | {a.age}</p>
+                        </div>
+                    )
+                })}
+            </div>
+        </>
+    )
+}
+
+
+// useRef
+
 
 
 // Advanced Intro
@@ -631,6 +898,18 @@ export class Advanced extends React.Component {
                 <UseEffectCleanup />
                 <hr />
                 <FetchData />
+                <hr />
+                <MultipleReturns />
+                <hr />
+                <ShortCircuitEvaluation />
+                <hr />
+                <TernaryOperator />
+                <hr />
+                <ShowHideComponent />
+                <hr />
+                <FormBasics />
+                <hr />
+                <MultipleInputs />
             </React.StrictMode>
         )
     }
