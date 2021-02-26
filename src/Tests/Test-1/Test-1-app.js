@@ -1,4 +1,5 @@
-import React,  { useState, useEffect, useRef, useReducer } from "react";
+import React,  { useState, useEffect, useRef, useReducer, useContext } from "react";
+import PropTypes from "prop-types"
 
 // greeting
 
@@ -1004,7 +1005,158 @@ function UseReducerBasic(){
 
 // prop Drilling
 
+function PropDrilling(){
 
+    const [people,setPeople] = useState(dataReducer)
+
+    const removePerson = (id) => {
+        setPeople((people) => {
+            return people.filter((person) => person.id !== id)
+        })
+    }
+
+    const SignlePerson = ({id, name, removePerson}) => {
+        return(
+            <div>
+                <p>{name}</p>
+                <button onClick={() => removePerson(id)}>remove person</button>
+            </div>
+        )
+    }
+
+    const List = ({people, removePerson}) => {
+        return(
+            <>
+                {people.map((person) => {
+                    return <SignlePerson  key={person.id} {...person}  removePerson={removePerson}  />
+                })}
+            </>
+        )
+    }
+
+    return(
+        <>
+            <h1>Prop Drilling</h1>
+            <List people={people} removePerson={removePerson} />
+        </>
+    )
+}
+
+// useContext
+
+
+function UseContext(){
+
+    const PersonContext = React.createContext()
+
+    const [people,setPeople] = useState(dataReducer)
+
+    const removePerson = (id) => {
+        setPeople((people) => {
+            return people.filter((person) => person.id !== id)
+        })
+    }
+
+    const SignlePerson = ({id, name}) => {
+
+        const {removePerson} = useContext(PersonContext)
+
+        return(
+            <div>
+                <p>{name}</p>
+                <button onClick={() => removePerson(id)}>remove person</button>
+            </div>
+        )
+    }
+
+    const List = () => {
+
+        const mainData = useContext(PersonContext)
+
+        return(
+            <>
+                {mainData.people.map((person) => {
+                    return <SignlePerson  key={person.id} {...person} />
+                })}
+            </>
+        )
+    }
+
+    return(
+        <PersonContext.Provider value={{removePerson, people}}>
+            <h1>Use Context</h1>
+            <List/>
+        </PersonContext.Provider>
+    )
+}
+
+
+// Custom Hooks  - useFetch
+
+function UseFetch(){
+
+    const url = "https://course-api.com/javascript-store-products";
+
+    const useFetch = (url) => {
+        const [loading, setLoading] = useState(true);
+        const [products,setProducts] = useState([]);
+
+        const getProducts = async () => {
+            const response = await fetch(url);
+            const products = await response.json();
+            setProducts(products);
+            setLoading(false)
+        }
+
+        useEffect(() => {
+            getProducts()
+        },[url])
+
+        return {loading,products}
+
+    }
+
+    const {loading,products} = useFetch(url);
+
+    const defaultImage = "https://raw.githubusercontent.com/john-smilga/react-advanced-2020/master/src/assets/default-image.jpeg"
+
+    const Product = ({image,name,price}) => {
+        console.log(image,name,price,image[0].url)
+
+        const url = image && image[0].url
+
+        return(
+            <div>
+                <p>{name}</p>
+                <img src={url || defaultImage} style={{width: "200px"}}  alt={name || "default name"}/>
+                <p>${price || 3.99}</p>
+            </div>
+        )
+    }
+
+    Product.propTypes = {
+        image : PropTypes.object.isRequired,
+        name : PropTypes.string.isRequired,
+        price : PropTypes.number.isRequired
+    }
+    // Product.defaultProps = {
+    //     name : "defualt name",
+    //     prive : 3.99,
+    //     image : defaultImage
+    // }
+
+    return(
+        <>
+            <h1>Use Fetch - Custom Hooks</h1>
+            <p>products</p>
+            <div>
+                {products.map((product) => {
+                    return <Product key={product.id} {...product.fields} />
+                })}
+            </div>
+        </>
+    )
+}
 
 
 // Advanced Intro
@@ -1049,6 +1201,12 @@ export class Advanced extends React.Component {
                 <UseRef />
                 <hr />
                 <UseReducerBasic />
+                <hr />
+                <PropDrilling />
+                <hr />
+                <UseContext />
+                <hr />
+                <UseFetch />
             </React.StrictMode>
         )
     }
