@@ -1,4 +1,4 @@
-import React,  { useState, useEffect } from "react";
+import React,  { useState, useEffect, useRef, useReducer } from "react";
 
 // greeting
 
@@ -870,6 +870,141 @@ function MultipleInputs() {
 
 // useRef
 
+function UseRef() {
+
+    const refContainer = useRef(null);
+    const divContainer = useRef(null)
+
+    const handlerSubmit = (e) => {
+        e.preventDefault();
+        // refContainer.current.value
+    }
+
+    useEffect(() => {
+        refContainer.current.focus()
+    })
+
+    return(
+        <>
+            <h1>Use Ref</h1>
+            <form  onSubmit={handlerSubmit}>
+                <input type="text" ref={refContainer} />
+                <button type="submit">submit</button>
+            </form>
+            <div ref={divContainer}>hello world</div>
+        </>
+    )
+}
+
+
+// use Reducer
+const reducer = (state,action) => {
+    if(action.type === "ADD_ITEM"){
+        const newItems = [...state.people, action.payload]
+        return {
+            ...state,
+            people: newItems,
+            isModalOpen:true,
+            modalContent: "item added"
+        }
+    }
+    if(action.type === "NO_VALUE"){
+        return{
+            ...state,
+            isModalOpen:true,
+            modalContent:"please enter value"
+        }
+    }
+    if(action.type ==="CLOSE_MODAL"){
+        return {
+            ...state,
+            isModalOpen:false,
+            modalContent: ""
+        }
+    }
+    if(action.type === "REMOVE_ITEM"){
+        let newItem = state.people.filter((person) => {
+            return person.id !== action.payload;
+        })
+        return {...state,people: newItem}
+    }
+}
+
+const dataReducer = [
+    { id: 1, name: 'john' },
+    { id: 2, name: 'peter' },
+    { id: 3, name: 'susan' },
+    { id: 4, name: 'anna' },
+  ];
+  const defaultState = {
+    people: [],
+    isModalOpen: false,
+    modalContent: '',
+  };
+
+function UseReducerBasic(){
+
+    const [name,setName] = useState('');
+    const [state,dispatch] = useReducer(reducer, defaultState)
+
+    // const [people, setPeople] = useState(data)
+    // const [showModal, setShowModal] = useState(false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(name){
+            const newItem = { id: new Date().getTime().toString(), name }
+            dispatch({type: "ADD_ITEM", payload: newItem});
+            setName("")
+        }else{
+            dispatch({type: "NO_VALUE"})
+        }
+    }
+
+    const closeModal = () => {
+        dispatch({type : "CLOSE_MODAL"})
+    }
+
+    const Modal = ({modalContent,closeModal}) => {
+
+        useEffect(() => {
+            setTimeout(() => {
+                closeModal()
+            }, 3000);
+        })
+
+
+        return(
+            <>
+                <p>{modalContent}</p>
+            </>
+        )
+    }
+
+    return(
+        <>
+            <h1>Use Reducer - UseState Setup</h1>
+            {state.isModalOpen && <Modal closeModal={closeModal}  modalContent={state.modalContent}/>}
+            <form onSubmit={handleSubmit}>
+                <input type="text " value={name} onChange={(e) => setName(e.target.value)}/>
+                <button type="submit">ADD</button>
+            </form>
+            {state.people.map((user) => {
+                return(
+                    <div key={user.id}>
+                        <p>{user.name}</p>
+                        <button  onClick={() => dispatch({type : "REMOVE_ITEM", payload :  user.id})} >remove item</button>
+                    </div>
+                )
+            })}
+        </>
+    )
+}
+
+
+// prop Drilling
+
+
 
 
 // Advanced Intro
@@ -910,6 +1045,10 @@ export class Advanced extends React.Component {
                 <FormBasics />
                 <hr />
                 <MultipleInputs />
+                <hr />
+                <UseRef />
+                <hr />
+                <UseReducerBasic />
             </React.StrictMode>
         )
     }
