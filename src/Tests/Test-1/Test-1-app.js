@@ -1,6 +1,6 @@
-import React,  { useState, useEffect, useRef, useReducer, useContext } from "react";
+import React,  { useState, useEffect, useRef, useReducer, useContext,useMemo, useCallback } from "react";
 import PropTypes from "prop-types"
-
+import {Link, useParams } from "react-router-dom"
 // greeting
 
 function Person(){
@@ -546,7 +546,6 @@ function UseEffectCleanup (){
     }
 
     useEffect(() => {
-        console.log("effect")
         window.addEventListener("resize",checkSize)
     },[])    
 
@@ -937,11 +936,11 @@ const dataReducer = [
     { id: 3, name: 'susan' },
     { id: 4, name: 'anna' },
   ];
-  const defaultState = {
-    people: [],
-    isModalOpen: false,
-    modalContent: '',
-  };
+const defaultState = {
+people: [],
+isModalOpen: false,
+modalContent: '',
+};
 
 function UseReducerBasic(){
 
@@ -1064,6 +1063,7 @@ function UseContext(){
         return(
             <div>
                 <p>{name}</p>
+                <Link to={`/person/${id}`} >Learn More</Link>
                 <button onClick={() => removePerson(id)}>remove person</button>
             </div>
         )
@@ -1121,7 +1121,6 @@ function UseFetch(){
     const defaultImage = "https://raw.githubusercontent.com/john-smilga/react-advanced-2020/master/src/assets/default-image.jpeg"
 
     const Product = ({image,name,price}) => {
-        console.log(image,name,price,image[0].url)
 
         const url = image && image[0].url
 
@@ -1157,6 +1156,144 @@ function UseFetch(){
         </>
     )
 }
+
+
+// react router
+
+const ReactRouter = () => {
+    return(
+        <>
+            <h1>React Router </h1>
+            <Link to="/" >Main page</Link>
+            <Link to="/Index" >Index</Link>
+        </>
+    )
+}
+
+export default function PersonPage(){
+
+    const [name,setName] = useState("default name")
+    const { id } = useParams();
+
+
+    useEffect(() => {
+        const newPerson = dataReducer.find((person) => Number(person.id) === Number(id))
+        setName(newPerson.name)
+    },[])
+
+    return(
+        <>
+            <p>{name}</p>
+            <p>elo elo elo elo</p>
+            <Link to="/Test1" >Back</Link>
+        </>
+    )
+}
+
+
+// Performace Optimization
+
+// react memo // callback // useMemo
+
+const calculateMostExpensive = (data) => {
+    return data.reduce((total,item) => {
+        const price = item.fields.price;
+        price > total ? total = price: null;
+        return total
+    },0) / 100
+}
+
+
+function ReactMemo(){
+
+    const [count, setCount] = useState(0)
+    const [cart,setCart] = useState(0);
+
+    const addToCart = useCallback(() => {
+        setCart(cart + 1)
+    },[cart])
+
+    
+
+
+    const url = "https://course-api.com/javascript-store-products";
+
+    const useFetch = (url) => {
+        const [loading, setLoading] = useState(true);
+        const [products,setProducts] = useState([]);
+
+        const getProducts = useCallback( async () => {
+            const response = await fetch(url);
+            const products = await response.json();
+            setProducts(products);
+            setLoading(false)
+        },[url])
+
+        useEffect(() => {
+            getProducts()
+        },[url,getProducts])
+
+        return {loading,products}
+
+    }
+
+    const {loading,products} = useFetch(url);
+
+    const mostExpensive = useMemo(() => calculateMostExpensive(products),[products])
+
+    const defaultImage = "https://raw.githubusercontent.com/john-smilga/react-advanced-2020/master/src/assets/default-image.jpeg"
+
+    
+
+    Product.propTypes = {
+        image : PropTypes.object.isRequired,
+        name : PropTypes.string.isRequired,
+        price : PropTypes.number.isRequired
+    }
+
+    return(
+        <>
+            <h1>ReactMemo</h1>
+
+            <div>
+                <p>Count : {count}</p>
+                <button onClick={() => setCount(count + 1)} >Click me</button>
+
+            </div>
+            <p>products</p>
+            <p>Most expensive : ${mostExpensive}</p>
+            <BigList products={products} addToCart={addToCart} />
+        </>
+    )
+
+}
+const Product = ({image,name,price,addToCart}) => {
+
+    const url = image && image[0].url
+
+    return(
+        <div>
+            <p>{name}</p>
+            <img src={url || defaultImage} style={{width: "200px"}}  alt={name || "default name"}/>
+            <p>${price || 3.99}</p>
+            <button onClick={addToCart}>click</button>
+        </div>
+    )
+}
+
+const BigList = React.memo(({products, addToCart}) => {
+    useEffect(() => {
+        console.log("werwe")
+    })
+
+    return(
+        <>
+            {products.map((product) => {
+                return <Product key={product.id} {...product.fields} addToCart={addToCart} />
+            })}
+        </>
+    )
+})
 
 
 // Advanced Intro
@@ -1207,10 +1344,11 @@ export class Advanced extends React.Component {
                 <UseContext />
                 <hr />
                 <UseFetch />
+                <hr />
+                <ReactRouter />
+                <hr />
+                <ReactMemo />
             </React.StrictMode>
         )
     }
 }
-
-
-

@@ -9,9 +9,9 @@ import {
 
 import Test1 from "./Tests/Test-1/Test-1";
 import Index from "./App/AppIndex";
+import PersonPage from "./Tests/Test-1/Test-1-app"
 
-
-class MainPage extends React.Component {
+export class MainPage extends React.Component {
     render(){
         return (
             <>
@@ -36,6 +36,8 @@ class MainIndex extends React.Component {
                     <Route exact path="/" component={MainPage} />
                     <Route exact path="/Index" component={Index} />
                     <Route exact path="/Test1" component={Test1} />
+                    <Route exact path='/person/:id'  children={<PersonPage />} ></Route>
+                    <Route path="*"  component={MainPage} />
                 </Switch>
             </Router>
         )
