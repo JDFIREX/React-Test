@@ -408,3 +408,126 @@ const UseMeasure = (deps) => {
 
     return [width, divRef];
 }
+
+
+//
+// 
+// 
+
+
+export const UseCallBackBasic = () => {
+
+    const [count, setCount] = useState(0)
+    const favoriteNums = [7,21,37];''
+
+    const increment = useCallback((n) => {
+        setCount(c => c + n)
+    },[setCount])
+
+
+    return(
+        <div>
+            <h1>Use Call Back Basic</h1>
+            <HelloCallBack  increment={increment} />
+            <p>count : {count}</p>
+            {favoriteNums.map(m => {
+                return(
+                    <Square increment={increment} n={m} key={m} />
+                )
+            })}
+        </div>
+    )
+}
+
+const HelloCallBack = React.memo(({increment}) => {
+
+    // useCountRenders()
+
+    return(
+        <button onClick={() => increment(5)}>hello</button>
+    )
+})
+
+const Square = React.memo(({n, increment}) => {
+
+    useCountRenders()
+
+    return(
+        <button onClick={() => increment(n)}>{ n }</button>
+    )
+})
+
+const useCountRenders = () => {
+    const renders = useRef(0);
+
+    console.log("renders: ", renders.current++)
+}
+
+//
+// 
+// 
+
+
+export const UseMemoBasic = () => {
+    // https://raw.githubusercontent.com/ajzbc/kanye.rest/quotes/quotes.json
+
+    const [count, setCount] = useState(0)
+
+    const {data} = UseFetchMemo("https://raw.githubusercontent.com/ajzbc/kanye.rest/quotes/quotes.json")
+
+
+    const computeLongesWord = (data) => {
+        console.log("compute")
+        if(!data){
+            return [];
+        }else{
+            let longesWord = ''
+
+            data.forEach(s => s.split(" ").forEach(w => {
+                if(w.length > longesWord.length){
+                    longesWord = w;
+                }
+            }))
+
+            return longesWord
+        }
+    }
+
+    const longesWord = useMemo(() => computeLongesWord(data), [data])
+
+    return(
+        <div>
+            <h1>Use Memo Basic</h1>
+            <div>{count}</div>
+            <button onClick={() => setCount(count + 1)}>+</button> <br />
+            <div>
+                {longesWord}        
+            </div>
+        </div>
+    )
+}
+
+const UseFetchMemo = (url) => {
+
+    const isCurrent = useRef(true)
+    const [data,setData] = useState({data: null});
+
+
+    useEffect(() => {
+        return () => {
+            isCurrent.current = false;
+        }
+    })
+
+
+    useEffect(async() => {
+        await fetch(url).then(r => r.json()).then(r => {
+            if(isCurrent.current){
+                setData({data : r})
+            }
+        })
+    },[url,setData])
+
+    return data;
+
+}

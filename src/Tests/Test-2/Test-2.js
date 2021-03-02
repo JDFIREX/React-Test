@@ -1,14 +1,4 @@
-import React, 
-{ 
-    useState, 
-    useEffect, 
-    useRef, 
-    useLayoutEffect, 
-    useCallback, 
-    useMemo, 
-    useReducer, 
-    useContext
-} from "react"
+import React from "react"
 import {Link} from "react-router-dom"
 import * as App from "./Test-2-app"
 
@@ -32,6 +22,10 @@ const Main = () => {
             <App.UseRefBasic />
             <hr />
             <App.UseLayoutEffectBasic />
+            <hr />
+            <App.UseCallBackBasic />
+            <hr />
+            <App.UseMemoBasic />
         </div>
     )
 }
