@@ -8,6 +8,7 @@ import {
   } from 'react-router-dom';
 
 import Test1 from "./Tests/Test-1/Test-1";
+import Test2 from "./Tests/Test-2/Test-2";
 import Index from "./App/AppIndex";
 import PersonPage from "./Tests/Test-1/Test-1-app"
 
@@ -21,6 +22,9 @@ export class MainPage extends React.Component {
                 <br/>
                 <hr />
                 <Link to="/Test1" >Test React - React Course 2020 - freeCodeCamp</Link>
+                <br/>
+                <hr />
+                <Link to="/Test2" >Test React - React Hooks Tutorial</Link>
             </>
         )
     }
@@ -36,6 +40,7 @@ class MainIndex extends React.Component {
                     <Route exact path="/" component={MainPage} />
                     <Route exact path="/Index" component={Index} />
                     <Route exact path="/Test1" component={Test1} />
+                    <Route exact path="/Test2" component={Test2} />
                     <Route exact path='/person/:id'  children={<PersonPage />} ></Route>
                     <Route path="*"  component={MainPage} />
                 </Switch>
