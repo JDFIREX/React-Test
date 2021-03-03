@@ -26,6 +26,10 @@ const Main = () => {
             <App.UseCallBackBasic />
             <hr />
             <App.UseMemoBasic />
+            <hr />
+            <App.UseReducerBasic />
+            <hr />
+            <App.UseContextBasic />
         </div>
     )
 }

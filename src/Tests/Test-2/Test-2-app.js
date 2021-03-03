@@ -9,7 +9,7 @@ import React,
     useReducer, 
     useContext
 } from "react"
-import {Link} from "react-router-dom"
+import {BrowserRouter as Router, Link, Route} from "react-router-dom"
 import "./test2.css"
 
 export const Header = () => {
@@ -509,6 +509,8 @@ export const UseMemoBasic = () => {
 
 const UseFetchMemo = (url) => {
 
+    
+
     const isCurrent = useRef(true)
     const [data,setData] = useState({data: null});
 
@@ -531,3 +533,140 @@ const UseFetchMemo = (url) => {
     return data;
 
 }
+
+// 
+// 
+// 
+
+const reducer = (state,action) => {
+
+    switch(action.type){
+        case "add-todo":
+            return {todos : [...state.todos, {text: action.text, completed : false}]};
+        case 'toggle-todo' : 
+            return {
+                todos: state.todos.map((t, idx) => idx === action.idx ? {...t, completed : !t.completed} : t)
+            }
+        default:
+            return state;
+    }
+
+}
+
+
+export const UseReducerBasic = () => {
+
+
+    // const [state,dispatch] = useReducer(reducer,0)
+    const [{todos},dispatch] = useReducer(reducer,{todos: []})
+    const [text, setText] = useState();
+
+
+    return(
+        <div>
+            <h1>Use Reducer Basic</h1>
+            {/* <p>{state}</p>
+            <button onClick={() => dispatch({type : "increment" })}>+</button>
+            <button onClick={() => dispatch({type : "decrement"})}>-</button> */}
+
+            <form onSubmit={e => {
+                e.preventDefault();
+                dispatch({type : "add-todo", text})
+                setText("");
+            }}>
+                <input value={text} onChange={ e => setText(e.target.value)} />
+                <button type="submit">add todos</button>
+            </form>
+            {todos.map((a,idx) => <div key={a.text} style={{textDecoration: a.completed ? "line-through" : ""}} onClick={() => dispatch({type: "toggle-todo", idx})}>{a.text}</div>)}
+        </div>
+    )
+}
+
+
+// 
+// 
+// 
+
+
+export const UseContextBasic = () => {
+
+
+    const [user, setUser] = useState(null)
+
+
+    const value = useMemo(() => ({user,setUser}), [user,setUser])
+
+    return(
+        <div>
+            <h1>Use Context Basic with Route</h1>
+            <Router>
+                <div>
+                    <nav>
+                        <ul>
+                            <li>
+                                <Link to="/Test2Index">Home</Link>
+                            </li>
+                            <li>
+                                <Link to="/about/">About</Link>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <UserContext.Provider value={value}>
+                    <Route path="/Test2Index" component={Index} />
+                    <Route path="/about/" component={about} />
+                </UserContext.Provider>
+
+            </Router>
+        </div>
+    )
+}
+
+const Index = () => {
+
+    const {user,setUser} = useContext(UserContext)
+
+    return(
+        <div>
+            <p>Index</p>
+            <pre>{JSON.stringify(user,null,2)}</pre>
+            {
+                user ? (
+                    <button
+                        onClick={() => {
+                            setUser(null)
+                        }}
+                    >logout</button>
+                 ) : (
+                    <button onClick={async () => {
+                        const user = await login();
+                        setUser(user)}
+                    } >login</button>
+                 )
+            }
+            
+        </div>
+    )
+}
+
+const about = () => {
+    const {user,setUser} = useContext(UserContext)
+
+    return(
+        <div>
+            <p>About</p>
+            <pre>{JSON.stringify(user,null,2)}</pre>
+        </div>
+    )
+}
+
+const login = async () => {
+    return {
+        id: 4,
+        username : "bob",
+        email: "bob@bob.com"
+    }
+}
+
+const UserContext = React.createContext(null)
