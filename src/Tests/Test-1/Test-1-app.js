@@ -518,13 +518,15 @@ const UseStateFunctionUpdateForm = () => {
 
 function UseEffectBasic() {
 
+    const [value,setValue] = useState(0)
+
+
     useEffect(() => {
         if(value >= 1){
          document.title = `new Messages(${value})`;
         }
     },[value])
 
-    const [value,setValue] = useState(0)
 
     return(
         <div>
@@ -1198,7 +1200,9 @@ export default function PersonPage(){
 const calculateMostExpensive = (data) => {
     return data.reduce((total,item) => {
         const price = item.fields.price;
-        price > total ? total = price: null;
+        if(price > total){
+            total = price
+        }
         return total
     },0) / 100
 }
@@ -1241,7 +1245,6 @@ function ReactMemo(){
 
     const mostExpensive = useMemo(() => calculateMostExpensive(products),[products])
 
-    const defaultImage = "https://raw.githubusercontent.com/john-smilga/react-advanced-2020/master/src/assets/default-image.jpeg"
 
     
 
@@ -1269,6 +1272,7 @@ function ReactMemo(){
 }
 const Product = ({image,name,price,addToCart}) => {
 
+    const defaultImage = "https://raw.githubusercontent.com/john-smilga/react-advanced-2020/master/src/assets/default-image.jpeg"
     const url = image && image[0].url
 
     return(

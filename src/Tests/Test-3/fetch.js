@@ -10,7 +10,7 @@ const wrapPromise = (promise) => {
         status = "success";
         result = r
     },e => {
-        statis = "error"
+        status = "error"
         result = e
     })
 

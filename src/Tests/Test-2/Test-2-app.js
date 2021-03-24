@@ -183,9 +183,9 @@ const UseFetch = (url) => {
 
     const [state, setState] = useState({data: null, loading: true})
 
-    useEffect(async() => {
+    useEffect(() => {
         setState(state => ({data: state.data, loading: true}))
-        await fetch(url).then(r => r.text()).then(r => {
+        fetch(url).then(r => r.text()).then(r => {
                 setState({data: r, loading: false})
         })
 
@@ -272,9 +272,9 @@ const UseFetchREF = (url) => {
     },[])
 
 
-    useEffect(async() => {
+    useEffect(() => {
         setState(state => ({data: state.data, loading: true}))
-        await fetch(url).then(r => r.text()).then(r => {
+        fetch(url).then(r => r.text()).then(r => {
             setTimeout(() => {
                 if(isCurrent.current){
                     setState({data: r, loading: false})
@@ -382,9 +382,9 @@ const UseFetchLayout = (url) => {
     },[])
 
 
-    useEffect(async() => {
+    useEffect(() => {
         setState(state => ({data: state.data, loading: true}))
-        await fetch(url).then(r => r.text()).then(r => {
+        fetch(url).then(r => r.text()).then(r => {
                 if(isCurrent.current){
                     setState({data: r, loading: false})
                 }
@@ -418,7 +418,7 @@ const UseMeasure = (deps) => {
 export const UseCallBackBasic = () => {
 
     const [count, setCount] = useState(0)
-    const favoriteNums = [7,21,37];''
+    const favoriteNums = [7,21,37];
 
     const increment = useCallback((n) => {
         setCount(c => c + n)
@@ -522,8 +522,8 @@ const UseFetchMemo = (url) => {
     })
 
 
-    useEffect(async() => {
-        await fetch(url).then(r => r.json()).then(r => {
+    useEffect(() => {
+        fetch(url).then(r => r.json()).then(r => {
             if(isCurrent.current){
                 setData({data : r})
             }
@@ -615,7 +615,7 @@ export const UseContextBasic = () => {
 
                 <UserContext.Provider value={value}>
                     <Route path="/Test2Index" component={Index} />
-                    <Route path="/about/" component={about} />
+                    <Route path="/about/" component={About} />
                 </UserContext.Provider>
 
             </Router>
@@ -650,7 +650,7 @@ const Index = () => {
     )
 }
 
-const about = () => {
+const About = () => {
     const {user,setUser} = useContext(UserContext)
 
     return(

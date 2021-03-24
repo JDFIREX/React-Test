@@ -24,9 +24,9 @@ const Test3 = () => {
         <div>
         {/* <React.SuspenseList  revealOrder="forwards || backwards || together ( bez tail )"  tail="hidden || collapse"> */}
             <React.Suspense fallback={<h1>Loading person</h1>}>
-                {/* <ErrorBoundary > */}
+                <ErrorBoundary >
                     <Person resource={resource} />
-                {/* </ErrorBoundary> */}
+                </ErrorBoundary>
             </React.Suspense>
             <React.Suspense fallback={<h1>Loading num</h1>}>
                 <Num resource={resource} />

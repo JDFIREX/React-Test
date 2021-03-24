@@ -245,9 +245,9 @@ export class Select extends React.Component {
             value : event.target.value
         })
     }
-    SubmitValue(){
+    SubmitValue(e){
         document.querySelector(".select_p").innerHTML = this.state.value;
-        event.preventDefault();
+        e.preventDefault();
     }
 
 
