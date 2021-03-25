@@ -11,6 +11,7 @@ import Test1 from "./Tests/Test-1/Test-1";
 import Test2 from "./Tests/Test-2/Test-2";
 import Test3 from "./Tests/Test-3/Test-3"
 import Test4 from "./Tests/Test-4/Test-4"
+import Test5 from "./Tests/Test-5/Test-5"
 import Index from "./App/AppIndex";
 import PersonPage from "./Tests/Test-1/Test-1-app"
 
@@ -33,6 +34,9 @@ export class MainPage extends React.Component {
                 <br/>
                 <hr />
                 <Link to="/Test4" >Test React - react-beautiful-dnd</Link>
+                <br/>
+                <hr />
+                <Link to="/Test5" >Test React - 5</Link>
             </>
         )
     }
@@ -51,6 +55,7 @@ class MainIndex extends React.Component {
                     <Route exact path="/Test2" component={Test2} />
                     <Route exact path="/Test3" component={Test3} />
                     <Route exact path="/Test4" component={Test4} />
+                    <Route exact path="/Test5" component={Test5} />
                     <Route exact path='/person/:id'  children={<PersonPage />} ></Route>
                     <Route path="*"  component={MainPage} />
                 </Switch>
