@@ -137,4 +137,25 @@
   padding: .5rem .2rem;
   text-align: center;
 }
+
+.Kalendarz .kal .YearRow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 100%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.Kalendarz .kal .YearRow .Year {
+  width: calc(100% / 4);
+  border: 1px solid red;
+  padding: .5rem .2rem;
+  text-align: center;
+}
 /*# sourceMappingURL=Kalendarz.css.map */

@@ -14,7 +14,7 @@ export const Circle = () => {
     }
 
     const Mousemove = (e) => {
-        const Atan = Math.atan2( e.clientY - 250, e.clientX - (window.innerWidth / 2)) * (180 / Math.PI);
+        const Atan = Math.atan2( e.clientY - 250 + window.scrollY, e.clientX - (window.innerWidth / 2)) * (180 / Math.PI);
         setRad(Atan)
     } 
 

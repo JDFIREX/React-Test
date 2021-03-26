@@ -82,5 +82,18 @@
                 text-align: center;
             }
         }
+        .YearRow{
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-between;
+            
+            .Year{
+                width: calc(100% / 4);
+                border: 1px solid red;
+                padding: .5rem .2rem;
+                text-align: center;
+            }
+        }
     }
 }
