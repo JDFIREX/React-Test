@@ -1,33 +1,33 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import "./Kalendarz.css"
 
 
 
 const GetMonthName = (m) => {
     switch(m){
-        case 0 :
-            return "JANUARY"; 
         case 1 :
-          return "FEBRUARY"; 
+            return "JANUARY"; 
         case 2 :
-           return "MARCH"; 
+          return "FEBRUARY"; 
         case 3 :
-           return "APRIL"; 
+           return "MARCH"; 
         case 4 :
-           return "MAY"; 
+           return "APRIL"; 
         case 5 :
-           return "JUNE";
+           return "MAY"; 
         case 6 :
-           return "JULY"; 
+           return "JUNE";
         case 7 :
-           return "AUGUST"; 
+           return "JULY"; 
         case 8 :
-           return "SEPTEMBER";
+           return "AUGUST"; 
         case 9 :
-            return "OCTOBER"; 
+           return "SEPTEMBER";
         case 10 :
-           return "NOVEMBER";
+            return "OCTOBER"; 
         case 11 :
+           return "NOVEMBER";
+        case 12 :
         return "DECEMBER";
         default : return "";
     }
@@ -41,10 +41,23 @@ export const Kalendarz = () => {
     const [date, setDate] = useState(new Date())
     const [Month, setMonth] = useState(date.getMonth())
     const [Year, setYear] = useState(date.getFullYear())
+    const currentDay = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+    const [selectDay, setSelectDay] = useState(currentDay)
+    const [show, setShow] = useState("days")
+    const [YearPart, setYearPart] = useState([2019,2030])
 
+    console.log(Year)
+
+    useEffect(() => {
+        if(Year < YearPart[0]){
+            setYearPart([YearPart[0] - 10, YearPart[1] - 10])
+        }else if(Year > YearPart[1]){
+            setYearPart([YearPart[0] + 10, YearPart[1] + 10])
+        }
+    },[Year,setYear])
 
     const ChangeMonth = (e) => {
-        if(e.target.name === "dec"){
+        if(e.target.dataset.c === "dec"){
             let nm = Number(Month) - 1;
             if(nm < 0) {
                 setYear(Year - 1)
@@ -62,101 +75,194 @@ export const Kalendarz = () => {
             }
         }
     }
-
     const ChangeYear = (e) => {
-        if(e.target.name === "dec"){
+        if(e.target.dataset.c === "dec"){
             setYear(Year - 1)
         }else{
             setYear(Year + 1)
         }
     }
+    const DayOtherMonth = (e,d) => {
+        ChangeMonth(e)
+        setSelectDay(d)
+    }
 
-    const SetKal = (Year,Month) => {
+    const SetKal = () => {
         let sDay = 1
         let dayInWeek = new Date(Year,Month,sDay).getDay();
-        let back = 1 - dayInWeek;
+        let back = 2 - dayInWeek;
         let days = []
-        let daysInMonth = new Date(Year,Month + 1,0).getDate();
-        
-
-        for(let i = 0 ; i > back; i--){
-            let d = new Date(Year,Month,i)
-            days.unshift({
-                day : d.getDate(),
-                month : d.getMonth() + 1,
-                Year : d.getFullYear()
-            })
-        }
-        for(let i = 1; i <= daysInMonth; i++){
-            let d = new Date(Year,Month,i)
-            days.push(
-                ({
+        let l = 0;
+        while(l < 42){
+            let ld =[]
+            for(let i = 0 ; i <= 6; i++){
+                let d = new Date(Year,Month,back)
+                ld.push({
                     day : d.getDate(),
                     month : d.getMonth() + 1,
                     Year : d.getFullYear()
                 })
-            )
+                back++;
+                l++
+            }
+            days.push(ld)
         }
+        return GenerateCal(days)
+    }
 
-        let daysRes = (6 * 7) - days.length;
+    const NotThisMonth =({x,d,f}) => {
+        return (
+            <div 
+                onClick={(e) => DayOtherMonth(e,d)}
+                data-c={f}
+                className="day not_this_month" 
+                style={{backgroundColor: "green"}}
+            >
+                {x.day}
+        </div>
+        )
+    }
 
-        for(let i = 1; i <= daysRes; i++){
-            let d = new Date(Year,Month + 1,i)
-            days.push(
-                ({
-                    day : d.getDate(),
-                    month : d.getMonth() + 1,
-                    Year : d.getFullYear()
-                })
-            )
-        }
-        days  = [
-            [days[0],days[1],days[2],days[3],days[4],days[5],days[6]],
-            [days[7],days[8],days[9],days[10],days[11],days[12],days[13]],
-            [days[14],days[15],days[16],days[17],days[18],days[19],days[20]],
-            [days[21],days[22],days[23],days[24],days[25],days[26],days[27]],
-            [days[28],days[29],days[30],days[31],days[32],days[33],days[34]],
-            [days[35],days[36],days[37],days[38],days[39],days[40],days[41]],
-        ]
-        console.log(days)
-        days = days.map((a,b) => {
+    const Day = ({x,d,s,c}) => {
+        return(
+            <div 
+                className={`day  ${c}`} 
+                onClick={() => setSelectDay(d)}
+                style={s}
+            >
+                    {x.day}
+                    <br />
+                    {
+                        selectDay === d && (
+                            <div>wybrany </div>
+                        )
+                    }
+            </div>
+        )
+    }
+
+    const GenerateCal = (days) => {
+        return days = days.map((a,b) => {
+            let f = b < 3 ? "dec" : "inc";
+            
             return(
                 <div className="kal_row" key={`${Year}-${Month + 1}-Week-${b + 1}`}>
                     {
-                        a.map(x => {
-                            let m = x.month;
-                            if(m !== Month + 1){
-                                return (
-                                    <div 
-                                            className="day" 
-                                            key={`${x.Year}-${x.month}-${x.day}`} 
-                                            style={{backgroundColor: "green"}}
-                                        >
-                                            {x.day}
-                                    </div>
-                                )
-                            }else{
-                                return (
-                                    <div 
-                                        className="day" 
-                                        key={`${x.Year}-${x.month}-${x.day}`} 
-                                    >
-                                            {x.day}
-                                    </div>
-                                )
+                        a.map(x => { 
+                            let d = `${x.Year}-${x.month}-${x.day}`;
+
+                            if(x.month !== Month + 1){
+                                return <NotThisMonth x={x} d={d} f={f} key={d} />
                             }
+                            
+                            if(currentDay === d) {
+                                return <Day x={x} d={d} s={{backgroundColor : "red"}} c={"current_day"} key={d}/>
+                            }
+
+                            return <Day x={x} d={d} key={d}/>
+
                         })
                     }
                 </div>
             )
         })
-        return days
+    }
+                    
+    const CenterButton = ({show}) => {
+
+        const HandleClick = (e) => {
+            switch(show){
+                case "days" :
+                    setShow("months")
+                ; break;
+                case "months" :
+                    setShow("years")
+                    // setInner(`${YearPart[0]}-${YearPart[1]}`)
+                ; break;
+                default : setShow(show); break;
+            }
+        } 
+        
+        return (
+            <button className="K_current"  onClick={HandleClick}>
+                {
+                    show === "days" ? (
+                        `${GetMonthName(Month + 1)} ${Year}`
+                    ) : 
+                    show === "months" ? (
+                        Year
+                    ) : (
+                        `${YearPart[0]}-${YearPart[1]}`
+                    )
+                }
+            </button>
+        )
     }
 
-    // console.log(new Date(Year,Month,40), new Date(Year,Month,40).toString().split(" ")[0])
-    // console.log(new Date(Year,Month,40).getDate())
 
+    const MonthCell = ({x}) => {
 
+        const HandleClick = (e) => {
+            setMonth(e.target.dataset.m - 1)
+            setShow("days")
+        }
+
+        return (
+            <div className="Month" data-m={x.monthId} onClick={HandleClick} >
+                {x.month}
+            </div>
+        )
+    }
+
+    const MonthRow = ({a}) => {
+
+        return (
+            <div className="Month_row" >
+                {
+                    a.map(x => {
+                        return (
+                            <MonthCell  key={`${x.year}-${x.month}`} x={x}/>
+                        )
+                    })
+                }
+            </div>
+        )
+
+    }
+
+    const SetMonths = () => {
+
+        let months = [];
+        let c = 1;
+        while(c <= 12){
+            let m = [];
+            for(let j = 0; j < 4; j++){
+                m.push({
+                    monthId : c,
+                    month : GetMonthName(c),
+                    year : Year
+                })
+                c++;
+            }
+            months.push(m)
+        }
+
+        return (
+            <>
+            {
+                months.map((a,b) => {
+                    return(
+                        <MonthRow key={`${Year}-Months-${b}`} a={a}/>
+                    )
+                })
+            }
+            </>
+        )
+    }
+
+    const SetYears = () => {
+        
+    }
 
     return (
         <div
@@ -166,25 +272,38 @@ export const Kalendarz = () => {
             <div className="Kalendarz">
 
                 <div className="K_btn">
-                    <button onClick={ChangeYear} name="dec">R--</button>
-                    <button onClick={ChangeMonth} name="dec">M--</button>
-                    <button className="K_current">{GetMonthName(Month)} {Year}</button>
-                    <button onClick={ChangeMonth} name="inc">M++</button>
-                    <button onClick={ChangeYear} name="inc">R++</button>
+                    <button onClick={ChangeYear} data-c="dec">R--</button>
+                    {show === "days" && <button onClick={ChangeMonth} data-c="dec">M--</button>}
+                    <CenterButton show={show}/>
+                    {show === "days" && <button onClick={ChangeMonth} data-c="inc">M++</button>}
+                    <button onClick={ChangeYear} data-c="inc">R++</button>
                 </div>
                     
-                <div className="days">
-                    <p>Mon</p>
-                    <p>Thue</p>
-                    <p>Wed</p>
-                    <p>Thu</p>
-                    <p>Fri</p>
-                    <p>Sat</p>
-                    <p>Sun</p>
-                </div>
+                {
+                    show === "days" && (
+                        <div className="days">
+                            <p>Mon</p>
+                            <p>Thue</p>
+                            <p>Wed</p>
+                            <p>Thu</p>
+                            <p>Fri</p>
+                            <p>Sat</p>
+                            <p>Sun</p>
+                        </div>
+                    )
+                }
 
                 <div className="kal">
-                        {SetKal(Year,Month)}
+                {
+                    show === "days" ? (
+                        <SetKal />
+                    ):
+                    show === "months" ? (
+                        <SetMonths />
+                    ) : (
+                        <SetYears />
+                    )
+                }
                 </div>
 
             </div>

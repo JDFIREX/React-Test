@@ -1,5 +1,5 @@
 .Kalendarz_box {
-  width: 100vw;
+  width: 100%;
   height: auto;
   border: 1px solid black;
   display: -webkit-box;
@@ -14,7 +14,7 @@
 }
 
 .Kalendarz {
-  width: auto;
+  width: 500px;
   height: auto;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -26,6 +26,7 @@
 }
 
 .Kalendarz .K_btn {
+  width: auto;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -33,6 +34,9 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: row;
           flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .Kalendarz .K_btn button {
@@ -111,5 +115,26 @@
   border: 1px solid blue;
   text-align: center;
   margin-bottom: 25px;
+}
+
+.Kalendarz .kal .Month_row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  width: 100%;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.Kalendarz .kal .Month_row .Month {
+  width: calc(100% / 4);
+  border: 1px solid red;
+  padding: .5rem .2rem;
+  text-align: center;
 }
 /*# sourceMappingURL=Kalendarz.css.map */
